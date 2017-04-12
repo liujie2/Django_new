@@ -16,6 +16,18 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from DjangoUeditor import urls as DjangoUeditor_urls
+# use Django server /media/files
+from django.conf import settings
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', 'news.views.index', name='index'),
+    url(r'^column/(?P<column_slug>[^/]+)/$', 'news.views.column_detail', name='column'),
+    url(r'^news/(?P<article_slug>[^/]+)/$', 'news.views.article_detail', name='article'),
+    url(r'^ueditor/', include(DjangoUeditor_urls)),
 ]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
